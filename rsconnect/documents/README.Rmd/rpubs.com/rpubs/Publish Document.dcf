@@ -1,0 +1,7 @@
+name: Publish Document
+account: rpubs
+server: rpubs.com
+appId: https://api.rpubs.com/api/v1/document/199364/3fb4c2f9d64c4829baa6901ba5fb33d2
+bundleId: https://api.rpubs.com/api/v1/document/199364/3fb4c2f9d64c4829baa6901ba5fb33d2
+url: http://rpubs.com/benjaminphillips22/199364
+when: 1469863171.61267
