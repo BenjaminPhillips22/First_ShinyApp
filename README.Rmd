@@ -5,7 +5,9 @@
 ### Benjamin Phillips
 
 This Shiny App can be found at
-https://benjaminphillips22.shinyapps.io/Salary/
+https://benjaminphillips22.shinyapps.io/salary2/
+
+
 
 
 

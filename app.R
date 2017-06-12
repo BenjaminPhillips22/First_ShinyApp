@@ -14,7 +14,7 @@ library(cowplot)
 library(plotly)
 
 #set wd
-setwd("C:/Users/ben/Documents/code/R/First_ShinyApp")
+#setwd("C:/Users/ben/Documents/code/R/First_ShinyApp")
 
 # table1
 load("salary_field_gender")

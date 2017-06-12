@@ -1,9 +1,10 @@
-name: Salary
+name: salary
+title: Salary
 account: benjaminphillips22
 server: shinyapps.io
 appId: 104480
-bundleId: 464006
+bundleId: 862729
 url: https://benjaminphillips22.shinyapps.io/Salary/
-when: 1464323098.8054
+when: 1497245633.58166
 asMultiple: FALSE
 asStatic: FALSE
