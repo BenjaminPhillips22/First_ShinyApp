@@ -11,6 +11,7 @@ library(ggplot2)
 library(dplyr)
 library(rsconnect)
 library(cowplot)
+library(plotly)
 
 #set wd
 setwd("C:/Users/ben/Documents/code/R/First_ShinyApp")
@@ -41,8 +42,8 @@ ui <- shinyUI(fluidPage(
         # Show a plot of the generated distribution
         mainPanel(
             tabsetPanel(type = "tabs",
-                        tabPanel("Starting Salary", plotOutput("plot1")),
-                        tabPanel("Separate by Gender", plotOutput("plot2")),
+                        tabPanel("Starting Salary", plotlyOutput("plot1", width = "100%")),
+                        tabPanel("Separate by Gender", plotlyOutput("plot2", width = "100%")),
                         tabPanel("About this App", 
                                  textOutput("text0"),
                                  textOutput("text1"),
@@ -69,11 +70,11 @@ server <- shinyServer(function(input, output) {
     # table2
     load("salary_field")
     
-    my_colours <- c("#9d6031","#546dd6","#a0b53c","#9f5ed1","#55b64f","#c74cae","#529d68","#dd4785","#4bc1b5","#cf4d2c","#4c9ad1","#e0883b","#9d95df","#c5a44d","#735a9e","#6d7930","#d585c4","#c94250","#a04b6d","#e18680")
+    my_colours <- c("#9d6031","#546dd6","#a0b53c","#9f5ed1","#55b64f","#c74cae","#529d68","#dd4785","#4bc1b5","#cf4d2c","#4c9ad1","#e0883b","#9d95df","#c5a44d","#000000","#735a9e","#6d7930","#d585c4","#c94250","#a04b6d","#e18680")
     my_fields <- c("Accounting","Agricultural Science","Architecture & Building","Art & Design ",
                    "Biological Sciences","Computer Science","Dentistry","Earth Sciences",
                    "Economics, Business","Education","Engineering","Humanities","Law","Mathematics",
-                  "Medicine","Paramedical Studies","Pharmacy (pre-reg)","Physical Sciences",
+                   "Median","Medicine","Paramedical Studies","Pharmacy (pre-reg)","Physical Sciences",
                   "Psychology","Social Sciences")
     
     
@@ -83,39 +84,38 @@ server <- shinyServer(function(input, output) {
     
     
     
-    output$plot1 <- renderPlot({
-        temp_colours <- my_colours[my_fields %in% tt()]
+    output$plot1 <- renderPlotly({
+        temp_colours <- my_colours[my_fields %in% c("Median",tt())]
         #print(temp_colours)
-        g1 <- ggplot(table2 %>% filter( field %in% tt() ),
+        g1 <- ggplot(table2 %>% filter( field %in% c("Median",tt()) ),
                      aes(x = year, y = avg.salary, colour = field))+
             geom_point()+
             geom_line() +
             labs(y = "Starting Salary (AU$ thousand)") +
             ylim(c(30,90))+
-            scale_colour_manual(values = temp_colours)
-        g2 <- geom_line(data = table2 %>% filter(field == "Median"),
-                        aes(x = year, y = avg.salary, colour = field), colour = "black")#+
-        g3 <- geom_point(data = table2 %>% filter(field == "Median"),
-                         aes(x = year, y = avg.salary, colour = field), colour = "black")#+
-        g4 <- g1+g2+g3+
-          scale_x_continuous(breaks = seq(2001, 2015, 3))#+
-          #theme(axis.text.x = element_text(angle=80, hjust = 0.5, vjust = 0.5))
-        ggdraw(add_sub(g4, "\n *The black line is the median starting salary for all fields"))
+            scale_colour_manual(values = temp_colours)+
+            scale_x_continuous(breaks = seq(2001, 2015, 3))+
+            theme(legend.title=element_blank())
+            
+        ggdraw(add_sub(g1, "\n *The black line is the median starting salary for all fields"))
+        
+        ggplotly(g1)
         
     })
     
     
-    output$plot2 <- renderPlot({
-        g1 <- ggplot(table1 %>%  filter( field %in% c("Median", tt()) ),
+    output$plot2 <- renderPlotly({
+        g2 <- ggplot(table1 %>%  filter( field %in% c("Median", tt()) ),
                      aes(x = year, y = salary, colour = gender))+
             geom_point()+
             geom_line() +
             labs(y = "Starting Salary (AU$ thousand)") +
             facet_grid(.~factor(field, levels = c("Median", my_fields[my_fields %in% tt()] )))+
             scale_x_continuous(breaks = seq(2001, 2015, 3))+
-            theme(axis.text.x = element_text(angle=80, hjust = 0.5, vjust = 0.5))+
+            theme(axis.text.x = element_text(angle=80, hjust = 0.5, vjust = 0.5, size = 8),
+                  legend.title=element_blank())+
             scale_color_manual(values = c("#4bb092", "#b460bd"))
-        g1
+        ggplotly(g2)
     })
     
     output$text0 <- renderText({ "\n "})
